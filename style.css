@@ -27,7 +27,7 @@ body {
 * {
     margin: 0px;
     padding: 0px;
-    background-color: #F5F5F5;
+    background-color: rgb(245,245,245);
 }
 
 #btnContainer {
@@ -120,4 +120,5 @@ H2 {
     cursor: default;
 
 }
+
 
