@@ -27,7 +27,6 @@ body {
 * {
     margin: 0px;
     padding: 0px;
-    background-color: white;
 }
 
 #btnContainer {
@@ -120,6 +119,7 @@ H2 {
     cursor: default;
 
 }
+
 
 
 
