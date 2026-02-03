@@ -27,6 +27,7 @@ body {
 * {
     margin: 0px;
     padding: 0px;
+    background-color: red;
 }
 
 #btnContainer {
@@ -117,4 +118,5 @@ H2 {
     font-weight: 600;
     transition: 0.1s;
     cursor: default;
+
 }
