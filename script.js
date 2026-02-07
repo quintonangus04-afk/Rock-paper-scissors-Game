@@ -3,184 +3,137 @@ const paperBtn = document.getElementById('Paper')
 const scissorsBtn = document.getElementById('Scissors')
 const outComeText = document.getElementById('computerChoiceText')
 const scoreTracker = document.getElementById('scoreTracker')
+
 let UserScore = 0
 let ComputerScore = 0
-
 let userChoice = ""
 
-function winner(winnerPlayer){
-    if (winnerPlayer === "User"){
-        outComeText.innerHTML = `well done you beat the computer, the score was ${UserScore}:${ComputerScore}`
-        scoreTracker.innerHTML = `${UserScore}/${ComputerScore}`
+// GAME OVER SCREEN
+function gameOver(winnerPlayer) {
+    // Hide game UI
+    rockBtn.style.display = "none"
+    paperBtn.style.display = "none"
+    scissorsBtn.style.display = "none"
+    scoreTracker.style.display = "none"
+
+    let finalMessage = ""
+
+    if (winnerPlayer === "User") {
+        finalMessage = `
+            🎉 You won the match! 🎉<br><br>
+            Final Score: ${UserScore} – ${ComputerScore}<br><br>
+            Tip: Try predicting the computer’s pattern next time!
+        `
     } else {
-        outComeText.innerHTML = `Sorry the computer beat you, your score was ${UserScore}/${ComputerScore}`
-        scoreTracker.innerHTML = `${UserScore}/${ComputerScore}`
+        finalMessage = `
+            😞 The computer won the match 😞<br><br>
+            Final Score: ${UserScore} – ${ComputerScore}<br><br>
+            Tip: Mix up your choices to avoid being predictable!
+        `
     }
+
+    outComeText.innerHTML = finalMessage
 }
 
-function resetGame(UserC){
+// RESET UI AFTER EACH ROUND
+function resetGame(UserC) {
+    rockBtn.classList.add('choiceBtn')
+    paperBtn.classList.add('choiceBtn')
+    scissorsBtn.classList.add('choiceBtn')
 
-    if (UserC == "rock"){
-        rockBtn.classList.add('choiceBtn')
-        rockBtn.classList.remove('choiceBtnActive')
-        paperBtn.classList.add('choiceBtn')
-        scissorsBtn.classList.add('choiceBtn')
-        paperBtn.classList.remove('choiceBtnDisabled')
-        scissorsBtn.classList.remove('choiceBtnDisabled')
-    } else if (UserC == "paper"){
-        paperBtn.classList.add('choiceBtn')
-        paperBtn.classList.remove('choiceBtnActive')
-        rockBtn.classList.add('choiceBtn')
-        scissorsBtn.classList.add('choiceBtn')
-        rockBtn.classList.remove('choiceBtnDisabled')
-        scissorsBtn.classList.remove('choiceBtnDisabled')
-    } else{
-        scissorsBtn.classList.add('choiceBtn')
-        scissorsBtn.classList.remove('choiceBtnActive')
-        paperBtn.classList.add('choiceBtn')
-        rockBtn.classList.add('choiceBtn')
-        paperBtn.classList.remove('choiceBtnDisabled')
-        rockBtn.classList.remove('choiceBtnDisabled')
-    }
+    rockBtn.classList.remove('choiceBtnActive', 'choiceBtnDisabled')
+    paperBtn.classList.remove('choiceBtnActive', 'choiceBtnDisabled')
+    scissorsBtn.classList.remove('choiceBtnActive', 'choiceBtnDisabled')
+
     outComeText.innerHTML = ""
+
     rockBtn.disabled = false
     paperBtn.disabled = false
-    scissorsBtn.disabled = false    
+    scissorsBtn.disabled = false
 }
 
-function computerChoice(){
-    let rand01 = Math.random() * 3
-    let CompuChoice = Math.floor(rand01)
-    if (CompuChoice == 0){
-        CompuChoice = "rock"
-    } else if (CompuChoice == 1){
-        CompuChoice = "paper"
-    } else {
-        CompuChoice = "scissors"
-    }
-    console.log('Computer choice has been generated, the choice was:',CompuChoice)
-    return CompuChoice
+// COMPUTER CHOICE
+function computerChoice() {
+    const choices = ["rock", "paper", "scissors"]
+    const choice = choices[Math.floor(Math.random() * 3)]
+    console.log("Computer choice:", choice)
+    return choice
 }
 
-function GameOutcomeCauculator(UserPlays){
-    let ComputerPlays = computerChoice()
+// CALCULATE OUTCOME
+function GameOutcomeCalculator(UserPlays) {
+    const ComputerPlays = computerChoice()
     let gameOutcome
-    if (UserPlays == ComputerPlays){
+
+    if (UserPlays === ComputerPlays) {
         gameOutcome = "draw"
-    } else if (ComputerPlays == "rock" && UserPlays == "scissors"){
-        gameOutcome = "loose"
-    } else if (UserPlays == "rock" && ComputerPlays == "scissors"){
-        gameOutcome = "win"
-    } else if (ComputerPlays == "paper" && UserPlays == "rock"){
-        gameOutcome = "loose"
-    } else if (ComputerPlays == "rock" && UserPlays == "paper"){
-        gameOutcome = "win"
-    } else if (ComputerPlays == "paper" && UserPlays == "scissors"){
+    } else if (
+        (UserPlays === "rock" && ComputerPlays === "scissors") ||
+        (UserPlays === "paper" && ComputerPlays === "rock") ||
+        (UserPlays === "scissors" && ComputerPlays === "paper")
+    ) {
         gameOutcome = "win"
     } else {
-        gameOutcome = "loose"
+        gameOutcome = "lose"
     }
 
     return {
         outCome: gameOutcome,
         computerPlay: ComputerPlays
     }
-
-
 }
 
-function outComeDisplay(OC, CompuC, UserC){
+// DISPLAY OUTCOME + CHECK FOR GAME OVER
+function outComeDisplay(OC, CompuC, UserC) {
 
-    if (UserC == "rock"){
-        rockBtn.classList.add('choiceBtnActive')
-        rockBtn.classList.remove('choiceBtnDisabled')
-    } else if (UserC == "paper"){
-        paperBtn.classList.add('choiceBtnActive')
-        paperBtn.classList.remove('choiceBtnDisabled')
-    } else{
-        scissorsBtn.classList.add('choiceBtnActive')
-        scissorsBtn.classList.remove('choiceBtnDisabled')
+    // Highlight user choice
+    if (UserC === "rock") rockBtn.classList.add('choiceBtnActive')
+    if (UserC === "paper") paperBtn.classList.add('choiceBtnActive')
+    if (UserC === "scissors") scissorsBtn.classList.add('choiceBtnActive')
+
+    if (OC === "draw") {
+        outComeText.innerHTML = `The computer played ${CompuC}, it's a draw.`
+    } else if (OC === "win") {
+        UserScore++
+        outComeText.innerHTML = `The computer played ${CompuC}, you won this round.`
+    } else {
+        ComputerScore++
+        outComeText.innerHTML = `The computer played ${CompuC}, you lost this round.`
     }
 
-    if (OC == "draw"){
-        outComeText.innerHTML = `The computer played ${CompuC}, you drawed this game.`
-    } else if (OC == "win"){
-        UserScore = UserScore + 1
-        outComeText.innerHTML = `The computer played ${CompuC}, you won this game.`
-        scoreTracker.innerHTML = `${UserScore} / ${ComputerScore}`
-    } else{
-        ComputerScore = ComputerScore + 1
-        outComeText.innerHTML = `The computer played ${CompuC}, you loose this game.`
-        scoreTracker.innerHTML = `${UserScore} / ${ComputerScore}`
-    }
-    setTimeout(() => resetGame(UserC), 2000);
+    scoreTracker.innerHTML = `${UserScore} / ${ComputerScore}`
 
+    // GAME OVER CHECK
+    if (UserScore === 10) {
+        gameOver("User")
+        return
+    }
+
+    if (ComputerScore === 10) {
+        gameOver("Computer")
+        return
+    }
+
+    setTimeout(() => resetGame(UserC), 2000)
 }
 
-rockBtn.addEventListener('click', function(){
-    userChoice = "rock"
-    console.log('User choice inputed into script, choice was:',userChoice)
+// BUTTON CLICK HANDLERS
+function handleClick(choice) {
+    userChoice = choice
+    console.log("User choice:", userChoice)
+
     rockBtn.classList.add('choiceBtnDisabled')
-    rockBtn.classList.remove('choiceBtn')
     paperBtn.classList.add('choiceBtnDisabled')
-    paperBtn.classList.remove('choiceBtn')
     scissorsBtn.classList.add('choiceBtnDisabled')
-    scissorsBtn.classList.remove('choiceBtn')
+
     rockBtn.disabled = true
     paperBtn.disabled = true
     scissorsBtn.disabled = true
-    retunedData = GameOutcomeCauculator(userChoice)
-    if (UserScore === 10){
-        winner("User")
-    }else if (ComputerScore === 10){
-        winner("Computer")
-    } else {
-         outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)   
-    }
-});
 
-paperBtn.addEventListener('click', function(){
-    userChoice = "paper"
-    console.log('User choice inputed into script, choice was:',userChoice)
-    rockBtn.classList.add('choiceBtnDisabled')
-    rockBtn.classList.remove('choiceBtn')
-    paperBtn.classList.add('choiceBtnDisabled')
-    paperBtn.classList.remove('choiceBtn')
-    scissorsBtn.classList.add('choiceBtnDisabled')
-    scissorsBtn.classList.remove('choiceBtn')
-    rockBtn.disabled = true
-    paperBtn.disabled = true
-    scissorsBtn.disabled = true
-    retunedData = GameOutcomeCauculator(userChoice)
-    if (UserScore === 10){
-        winner("User")
-    }else if (ComputerScore === 10){
-        winner("Computer")
-    } else {
-         outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)   
-    }
-});
+    let returnedData = GameOutcomeCalculator(userChoice)
+    outComeDisplay(returnedData.outCome, returnedData.computerPlay, userChoice)
+}
 
-scissorsBtn.addEventListener('click', function(){
-    userChoice = "scissors"
-    console.log('User choice inputed into script, choice was:',userChoice)
-    rockBtn.classList.add('choiceBtnDisabled')
-    rockBtn.classList.remove('choiceBtn')
-    paperBtn.classList.add('choiceBtnDisabled')
-    paperBtn.classList.remove('choiceBtn')
-    scissorsBtn.classList.add('choiceBtnDisabled')
-    scissorsBtn.classList.remove('choiceBtn')
-    rockBtn.disabled = true
-    paperBtn.disabled = true
-    scissorsBtn.disabled = true
-    retunedData = GameOutcomeCauculator(userChoice)
-    if (UserScore === 10){
-        winner("User")
-    }else if (ComputerScore === 10){
-        winner("Computer")
-    } else {
-         outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)   
-    }
-});
-
-
+rockBtn.addEventListener('click', () => handleClick("rock"))
+paperBtn.addEventListener('click', () => handleClick("paper"))
+scissorsBtn.addEventListener('click', () => handleClick("scissors"))
