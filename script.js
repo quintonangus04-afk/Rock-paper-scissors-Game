@@ -8,6 +8,16 @@ let ComputerScore = 0
 
 let userChoice = ""
 
+function winner(winnerPlayer){
+    if (winnerPlayer === "User"){
+        outComeText.innerHTML = `well done you beat the computer, the score was ${UserScore}:${ComputerScore}`
+        scoreTracker.innerHTML = `${UserScore}/${ComputerScore}`
+    } else {
+        outComeText.innerHTML = `Sorry the computer beat you, your score was ${UserScore}/${ComputerScore}`
+        scoreTracker.innerHTML = `${UserScore}/${ComputerScore}`
+    }
+}
+
 function resetGame(UserC){
 
     if (UserC == "rock"){
@@ -120,7 +130,13 @@ rockBtn.addEventListener('click', function(){
     paperBtn.disabled = true
     scissorsBtn.disabled = true
     retunedData = GameOutcomeCauculator(userChoice)
-    outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)
+    if (UserScore === 10){
+        winner("User")
+    }else if (ComputerScore === 10){
+        winner("Computer")
+    } else {
+         outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)   
+    }
 });
 
 paperBtn.addEventListener('click', function(){
@@ -136,7 +152,13 @@ paperBtn.addEventListener('click', function(){
     paperBtn.disabled = true
     scissorsBtn.disabled = true
     retunedData = GameOutcomeCauculator(userChoice)
-    outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)
+    if (UserScore === 10){
+        winner("User")
+    }else if (ComputerScore === 10){
+        winner("Computer")
+    } else {
+         outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)   
+    }
 });
 
 scissorsBtn.addEventListener('click', function(){
@@ -152,6 +174,13 @@ scissorsBtn.addEventListener('click', function(){
     paperBtn.disabled = true
     scissorsBtn.disabled = true
     retunedData = GameOutcomeCauculator(userChoice)
-    outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)
+    if (UserScore === 10){
+        winner("User")
+    }else if (ComputerScore === 10){
+        winner("Computer")
+    } else {
+         outComeDisplay(retunedData.outCome, retunedData.computerPlay, userChoice)   
+    }
 });
+
 
